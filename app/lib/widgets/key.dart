@@ -24,17 +24,17 @@ class _KeyboardButtonState extends State<KeyboardButton> with OnContextReady {
   late StreamSubscription _subscription;
 
   bool isPressed = false;
+  int pressCount = 0;
 
   @override
   void onContextReady() {
-    super.initState();
-
     _subscription = Shared.of<Stream<KeyboardEvent>>(context)
         .where((event) => keyCodeToString[event.keycode] == widget.text)
         .listen((event) async {
       switch (event.type.toDartString()) {
         case "key_press":
           setState(() {
+            ++pressCount;
             isPressed = true;
           });
           break;
@@ -57,38 +57,48 @@ class _KeyboardButtonState extends State<KeyboardButton> with OnContextReady {
   Widget build(BuildContext context) {
     return Expanded(
       flex: widget.flex,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-        margin: const EdgeInsets.symmetric(horizontal: 2.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(3.0),
-            color: isPressed ? Colors.blue : Colors.black54,
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: isPressed
-                  ? const [
-                      Colors.deepPurple,
-                      Colors.blueGrey,
-                    ]
-                  : const [
-                      Colors.black,
-                      Colors.black54,
-                      Colors.black,
-                    ],
-            )),
-        alignment: Alignment.center,
-        child: FittedBox(
-          child: Text(
-            widget.text,
-            style: const TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
+      child: Stack(
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.bounceInOut,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+            margin: const EdgeInsets.symmetric(horizontal: 2.0),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3.0),
+                color: isPressed ? Colors.blue : Colors.black54,
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: isPressed
+                      ? const [
+                          Colors.deepPurple,
+                          Colors.blueGrey,
+                        ]
+                      : const [
+                          Colors.black,
+                          Colors.black54,
+                          Colors.black,
+                        ],
+                )),
+            alignment: Alignment.center,
+            child: FittedBox(
+              child: Text(
+                widget.text,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
             ),
           ),
-        ),
+          Positioned(
+            bottom: 4.0,
+            right: 6.0,
+            child: Text(
+              '$pressCount',
+              style: Theme.of(context).textTheme.caption,
+            ),
+          )
+        ],
       ),
     );
   }

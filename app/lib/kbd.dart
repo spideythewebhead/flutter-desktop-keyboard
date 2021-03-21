@@ -75,7 +75,7 @@ final keyCodeToString = <int, String>{
   68: 'F10',
   87: 'F11',
   88: 'F12',
-  151: 'WIN'
+  125: 'WIN'
 };
 
 class KeyboardEvent extends Struct {
@@ -145,6 +145,12 @@ class Kbd {
     final path = _getKeyboardPath();
     final kbdFd = _getFdFromPath(path);
 
+    sendPort.send(kbdFd);
+
+    if (kbdFd == -1) {
+      return;
+    }
+
     while (true) {
       sendPort.send(_nextKeyboardEvent(kbdFd));
     }
@@ -154,6 +160,10 @@ class Kbd {
     await for (final event in _receivePort) {
       if (event is int) {
         _kbdFd = event;
+
+        if (_kbdFd == -1) {
+          print("Run program as root to capture input events. fd -1");
+        }
       } else {
         _eventsController.add(event);
       }

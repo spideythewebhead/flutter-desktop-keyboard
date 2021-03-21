@@ -13,6 +13,8 @@ int main(int argc, char const *argv[])
 
   auto kbd_fd = get_fd_from_path(path);  
 
+  cout << "fd: " << kbd_fd << endl;
+
   while (1) {
 
     auto event = event_from_keyboard(kbd_fd);
