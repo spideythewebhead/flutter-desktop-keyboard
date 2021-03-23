@@ -10,8 +10,8 @@ using std::filesystem::directory_iterator;
 using std::string;
 
 const char* get_keyboard_path() {
-  for (const auto& entry: directory_iterator("/dev/input/by-id")) {
-    if (entry.path().filename().string().find("Keyboard-event-kbd") != string::npos) {
+  for (const auto& entry: directory_iterator("/dev/input/by-path")) {
+    if (entry.path().filename().string().find("0-event-kbd") != string::npos) {
       auto matchPath = entry.path().string();
       char *path = new char[matchPath.length() + 1];
       memcpy(path, matchPath.c_str(), matchPath.length() + 1);
