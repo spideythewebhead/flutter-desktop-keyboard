@@ -3,9 +3,8 @@
 *this is just for fun. Don't panic if you see the c++ code 😱*
 
 An app thats monitors global keyboard events.
-Semi works for linux, as i don't know how to find the proper link in `/dev/input/by-id/*`
-
-Also for input to work you need to run the app as root.
+It works by find the proper link inn`/dev/input/by-path`
+Also for input to work you need to run the app as root or you can add permissions to your user.
 
 ### Steps
 
